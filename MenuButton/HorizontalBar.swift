@@ -66,7 +66,7 @@ class HorizontalBar: CAShapeLayer {
         lineWidth = 1
         fillColor = nil
         strokeColor = UIColor.black.cgColor
-        backgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0).cgColor
+        backgroundColor = UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.0).cgColor
         path = self.shapePath.cgPath
     }
 

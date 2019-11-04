@@ -10,16 +10,25 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var menuButton1: MenuButton! {
+        didSet {
+            menuButton1.ontap = { _ in
+                // Do something
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         let menuButton = MenuButton(frame: CGRect(x: view.frame.midX, y: view.frame.midY, width: 100, height: 100))
+        menuButton.ontap = { tapped in
+            print(tapped)
+        }
         view.addSubview(menuButton)
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 

@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-class MenuButton: UIButton {
+class MenuButton: UIView {
     // MARK: -  Properties
     
     /// Gradient colors
@@ -33,7 +33,7 @@ class MenuButton: UIButton {
     open var ontap: ((Bool) -> Void)?
 
     /// Horizontal bars
-    private lazy var horizontalBars: [HorizontalBar] = {
+    private(set) lazy var horizontalBars: [HorizontalBar] = {
         let topHorizontalBar: HorizontalBar = HorizontalBar(frame: CGRect(x: bounds.midX/2,
                                                                           y: bounds.midY - (bounds.height/10 + 3),
                                                                           width: bounds.width/2,
@@ -83,14 +83,18 @@ class MenuButton: UIButton {
             horizontalBars[1].shrink()
             horizontalBars[2].rotate(toPoint: CGPoint(x: 0, y: -bounds.height/10 - 3), byRadian: -.pi/4)
         }
-        
-        ontap?(hasAnimated)
         hasAnimated = !hasAnimated
+        ontap?(hasAnimated)
     }
     
     /// Default setup
     fileprivate func setupView() {
-        addTarget(self, action: #selector(self.onTapButton), for: UIControlEvents.touchUpInside)
+
+        backgroundColor = .white
+
+        /// Add ontap gesture
+        let onTapGesture = UITapGestureRecognizer(target: self, action: #selector(onTapButton))
+        addGestureRecognizer(onTapGesture)
 
         /// Add horizontal bar
         for horizontalBar in self.horizontalBars {
@@ -128,12 +132,12 @@ class MenuButton: UIButton {
         setupView()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-       super.init(coder: aDecoder)
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+       super.init(coder: aDecoder)
     }
 }
