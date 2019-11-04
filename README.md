@@ -1,8 +1,9 @@
 # MenuButton
 
-Cute animated UI button interaction
+Cute animated UI button micro interaction
 
-![menu_button_interaction](https://user-images.githubusercontent.com/13130384/68116581-896a2180-ff3e-11e9-806e-f061cac450bf.gif)
+![ezgif com-resize](https://user-images.githubusercontent.com/13130384/68116963-6f7d0e80-ff3f-11e9-80bf-0288ba65fdb1.gif)
+
 
 # How to use
 
