@@ -13,7 +13,6 @@ class MenuButton: UIButton {
     // MARK: -  Properties
     
     /// Gradient colors
-    @IBInspectable
     open var gradientColors: [CGColor] = [
         UIColor(red:0.44, green:0.47, blue:0.94, alpha:1.0).cgColor,
         UIColor(red:0.58, green:0.42, blue:0.98, alpha:1.0).cgColor,
@@ -88,6 +87,16 @@ class MenuButton: UIButton {
         ontap?(hasAnimated)
         hasAnimated = !hasAnimated
     }
+    
+    /// Default setup
+    fileprivate func setupView() {
+        addTarget(self, action: #selector(self.onTapButton), for: UIControlEvents.touchUpInside)
+
+        /// Add horizontal bar
+        for horizontalBar in self.horizontalBars {
+            layer.addSublayer(horizontalBar)
+        }
+    }
 
     // MARK: - Override funcs
     override func draw(_ rect: CGRect) {
@@ -116,15 +125,15 @@ class MenuButton: UIButton {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addTarget(self, action: #selector(self.onTapButton), for: UIControlEvents.touchUpInside)
-
-        /// Add horizontal bar
-        for horizontalBar in self.horizontalBars {
-            layer.addSublayer(horizontalBar)
-        }
+        setupView()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+       super.init(coder: aDecoder)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupView()
     }
 }

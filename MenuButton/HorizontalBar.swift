@@ -11,14 +11,6 @@ import UIKit
 class HorizontalBar: CAShapeLayer {
 
     // MARK: Properties
-    
-    override var frame: CGRect {
-        didSet {
-            if frame.width <= 0 || frame.height <= 0 {
-                fatalError("Frame size cannot be less than 0")
-            }
-        }
-    }
 
     /// Horizontal bar shape's path
     fileprivate lazy var shapePath: UIBezierPath = {
