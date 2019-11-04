@@ -10,20 +10,32 @@ import UIKit
 
 class HorizontalBar: CAShapeLayer {
 
-    // MARK: horizontal bar properties
+    // MARK: Properties
+    
+    override var frame: CGRect {
+        didSet {
+            if frame.width <= 0 || frame.height <= 0 {
+                fatalError("Frame size cannot be less than 0")
+            }
+        }
+    }
 
-    /// horizontal bar shape's path
+    /// Horizontal bar shape's path
     fileprivate lazy var shapePath: UIBezierPath = {
         return UIBezierPath(roundedRect: bounds, cornerRadius: 5)
     }()
 
-    /// rotate horizontal bar
-    open func rotate(translation: CGPoint, radian: CGFloat) {
-        let rotate: CGAffineTransform = CGAffineTransform(translationX: translation.x, y: translation.y).rotated(by: radian)
+    /// Rotate horizontal bar
+    ///
+    /// - Parameters:
+    ///     - toPoint: Position by point.
+    ///     - byRadian: Rotate by radian.
+    open func rotate(toPoint: CGPoint, byRadian: CGFloat) {
+        let rotate: CGAffineTransform = CGAffineTransform(translationX: toPoint.x, y: toPoint.y).rotated(by: byRadian)
         self.transform = CATransform3DMakeAffineTransform(rotate)
     }
 
-    /// shrink bar until dissapear
+    /// Shrink bar until dissapear
     open func shrink() {
         let shrinkAnim = CABasicAnimation(keyPath: "transform.scale.x")
         shrinkAnim.fromValue = 1
@@ -35,7 +47,7 @@ class HorizontalBar: CAShapeLayer {
         add(shrinkAnim, forKey: shrinkAnim.keyPath)
     }
 
-    /// unshrink until re-appear to original size
+    /// Unshrink until re-appear to original size
     open func unShrink() {
         let shrinkAnim = CABasicAnimation(keyPath: "transform.scale.x")
         shrinkAnim.fromValue = 0
@@ -47,11 +59,18 @@ class HorizontalBar: CAShapeLayer {
         add(shrinkAnim, forKey: shrinkAnim.keyPath)
     }
 
-    /// default set up
-    fileprivate func defaultSetUp(frame: CGRect?) {
-        if frame != nil {
-            self.frame = frame!
+    /// Default setup
+    ///
+    /// - Parameters:
+    ///     - withFrame: Setup with new frame
+    fileprivate func defaultSetUp(withFrame: CGRect?) {
+        guard let newFrame = withFrame else {
+            frame = .zero
+            return
         }
+
+        frame = newFrame
+
         lineWidth = 1
         fillColor = nil
         strokeColor = UIColor.black.cgColor
@@ -62,7 +81,7 @@ class HorizontalBar: CAShapeLayer {
     // MARK: - init
     init(frame: CGRect) {
         super.init()
-        self.defaultSetUp(frame: frame)
+        self.defaultSetUp(withFrame: frame)
     }
 
     // MARK: - override funcs

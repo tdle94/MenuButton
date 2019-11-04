@@ -8,13 +8,12 @@
 
 import UIKit
 
+@IBDesignable
 class MenuButton: UIButton {
-    // MARK: - Menu button properties
+    // MARK: -  Properties
     
-    /// gradient layer
-    open var gradientLayer: CAGradientLayer = CAGradientLayer()
-
-    /// gradient colors
+    /// Gradient colors
+    @IBInspectable
     open var gradientColors: [CGColor] = [
         UIColor(red:0.44, green:0.47, blue:0.94, alpha:1.0).cgColor,
         UIColor(red:0.58, green:0.42, blue:0.98, alpha:1.0).cgColor,
@@ -25,11 +24,17 @@ class MenuButton: UIButton {
         }
     }
 
-    /// check whether button has animated
-    open private(set) var hasAnimated: Bool = false
+    /// Gradient layer
+    fileprivate var gradientLayer: CAGradientLayer = CAGradientLayer()
 
-    /// horizontal bars
-    open lazy var horizontalBars: [HorizontalBar] = {
+    /// Check whether button has animated
+    open private(set) var hasAnimated: Bool = false
+    
+    /// On tap action closure. Assign this to notify yourself whenever button is tap
+    open var ontap: ((Bool) -> Void)?
+
+    /// Horizontal bars
+    private lazy var horizontalBars: [HorizontalBar] = {
         let topHorizontalBar: HorizontalBar = HorizontalBar(frame: CGRect(x: bounds.midX/2,
                                                                           y: bounds.midY - (bounds.height/10 + 3),
                                                                           width: bounds.width/2,
@@ -45,10 +50,13 @@ class MenuButton: UIButton {
         return [topHorizontalBar, midHorizontalBar, botHorizontalBar]
     }()
 
-    /// animate gradient layer color
-    open func animateGradientLayer(toGradient: [CGColor]) {
+    /// Animate to an array of gradient colors
+    ///
+    /// - Parameters:
+    ///     - toGradient: The *x* component of the vector.
+    open func animate(toGradient: [CGColor]) {
         let animateGradient: CABasicAnimation = CABasicAnimation(keyPath: "colors")
-        animateGradient.fromValue = self.gradientColors
+        animateGradient.fromValue = gradientColors
         animateGradient.toValue = toGradient
         animateGradient.duration = 2
         animateGradient.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.88, 0.09, 0.99)
@@ -57,32 +65,34 @@ class MenuButton: UIButton {
         gradientLayer.add(animateGradient, forKey: animateGradient.keyPath)
     }
 
-    /// on tap button action
+    /// Response to user on tap action
     @objc fileprivate func onTapButton() {
-        if self.hasAnimated {
-            // unanimate
-            self.animateGradientLayer(toGradient: self.gradientColors)
-            self.horizontalBars[0].rotate(translation: CGPoint(x: 0, y: 0), radian: 0)
-            self.horizontalBars[1].unShrink()
-            self.horizontalBars[2].rotate(translation: CGPoint(x: 0, y: 0), radian: 0)
+        if hasAnimated {
+            /// Unanimate
+            animate(toGradient: self.gradientColors)
+            horizontalBars[0].rotate(toPoint: CGPoint(x: 0, y: 0), byRadian: 0)
+            horizontalBars[1].unShrink()
+            horizontalBars[2].rotate(toPoint: CGPoint(x: 0, y: 0), byRadian: 0)
         } else {
-            // animate
-            self.animateGradientLayer(toGradient: [
+            /// Animate
+            animate(toGradient: [
                 UIColor(red:0.34, green:0.59, blue:0.98, alpha:1.0).cgColor,
                 UIColor(red:0.71, green:0.80, blue:0.95, alpha:1.0).cgColor,
                 UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0).cgColor
             ])
-            self.horizontalBars[0].rotate(translation: CGPoint(x: 0, y: bounds.height/10 + 3), radian: .pi/4)
-            self.horizontalBars[1].shrink()
-            self.horizontalBars[2].rotate(translation: CGPoint(x: 0, y: -bounds.height/10 - 3), radian: -.pi/4)
+            horizontalBars[0].rotate(toPoint: CGPoint(x: 0, y: bounds.height/10 + 3), byRadian: .pi/4)
+            horizontalBars[1].shrink()
+            horizontalBars[2].rotate(toPoint: CGPoint(x: 0, y: -bounds.height/10 - 3), byRadian: -.pi/4)
         }
-        self.hasAnimated = !self.hasAnimated
+        
+        ontap?(hasAnimated)
+        hasAnimated = !hasAnimated
     }
 
-    // MARK: - override funcs
+    // MARK: - Override funcs
     override func draw(_ rect: CGRect) {
         
-        // set circle and path shape
+        /// Set circle and path shape
         let circleShape: CAShapeLayer = CAShapeLayer()
         let circlePath: UIBezierPath = UIBezierPath(arcCenter: CGPoint(x: rect.midX, y: rect.midY),
                                                     radius: rect.width/2,
@@ -95,7 +105,7 @@ class MenuButton: UIButton {
         UIColor.white.setStroke()
         circlePath.stroke()
 
-        // set gradient color
+        /// Set gradient color
         gradientLayer.frame = bounds
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0)
@@ -108,7 +118,7 @@ class MenuButton: UIButton {
         super.init(frame: frame)
         addTarget(self, action: #selector(self.onTapButton), for: UIControlEvents.touchUpInside)
 
-        // add horizontal bar
+        /// Add horizontal bar
         for horizontalBar in self.horizontalBars {
             layer.addSublayer(horizontalBar)
         }
