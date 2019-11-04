@@ -7,7 +7,7 @@ Cute animated UI button micro interaction
 
 ## How to use
 
-You can just copy the file `MenuButon.swift` and `HorizontalBar.swift` to your project and start experimenting. No pod :blush:
+You can just copy `MenuButon.swift` file to your project and start experimenting. No pod :blush:
 
 and just simply use it like any other UIView
 ```swift
