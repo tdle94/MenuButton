@@ -9,11 +9,14 @@ Cute animated UI button micro interaction
 
 You can just copy the file `MenuButon.swift` and `HorizontalBar.swift` to your project and start experimenting. No pod :blush:
 
+and just simply use it like any other UIView
 ```swift
 let menuButton = MenuButton(frame: CGRect(x: view.frame.midX, y: view.frame.midY, width: 100, height: 100))
 menuButton.ontap = { tapped in
   // Do something
 }
+
+view.addSubview(menuButton)
 ```
 
 or in StoryBoard. Just set custom class to MenuButton
